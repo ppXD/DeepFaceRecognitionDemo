@@ -51,17 +51,20 @@ backends = [
 def face_rec(video_frame):
     global faces, face_match
     try:
-        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0], detector_backend=backends[4])
+        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0], detector_backend=backends[0])
         faces = []
         if len(face_results):
-            face_match = True
+            has_face = False
             for face in face_results:
-                face_x = face['source_x'].values[0]
-                face_y = face['source_y'].values[0]
-                face_w = face['source_w'].values[0]
-                face_h = face['source_h'].values[0]
-                identity = re.sub(r"\d+$", "", face['identity'].values[0].split("/")[-1].split(".")[0])
-                faces.append(FaceObject(identity, face_x, face_y, face_w, face_h))
+                if len(face):
+                    has_face = True
+                    face_x = face['source_x'].values[0]
+                    face_y = face['source_y'].values[0]
+                    face_w = face['source_w'].values[0]
+                    face_h = face['source_h'].values[0]
+                    identity = re.sub(r"\d+$", "", face['identity'].values[0].split("/")[-1].split(".")[0])
+                    faces.append(FaceObject(identity, face_x, face_y, face_w, face_h))
+            face_match = has_face
         else:
             faces = []
             face_match = False
