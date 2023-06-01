@@ -1,24 +1,31 @@
-<div class="markdown-body"><h1>Face Recognition</h1>
-<p>This project is a demo showcasing facial recognition using deep learning, based on the <a href="https://github.com/serengil/deepface">deepface</a> repository.</p>
-<h2>Dependencies</h2>
-<p>The following dependencies are required to run this project:</p>
-<ul>
-<li>tensorflow</li>
-<li>deepface</li>
-</ul>
-<p>You can install them using <code>pip</code>:</p>
-<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang"></span><span class="code-block-header__copy"></span></div><code class="hljs code-block-body ">pip <span class="hljs-keyword">install</span> tensorflow
-pip <span class="hljs-keyword">install</span> deepface
+<div class="markdown-body"><h1>Project Name</h1>
+<p>This project is a demo based on <a href="https://github.com/serengil/deepface">deepface</a></p>
+<h2>Installation</h2>
+<p>To install the dependencies, run the following commands:</p>
+<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang"></span><span class="code-block-header__copy"></span></div><code class="hljs code-block-body bash">pip install tensorflow
+pip install deepface
 </code></pre>
 <h2>Usage</h2>
-<p>The <code>database</code> directory is used to store the facial data that you want to recognize. The structure of the directory should be as follows:</p>
+<p>This demo includes the following files:</p>
+<ul>
+<li><code>face_detection.py</code>: Face detection and alignment</li>
+<li><code>face_rec_find.py</code>: Multi-face recognition</li>
+<li><code>face_rec_verify.py</code>: Single-face recognition</li>
+</ul>
+<h3>Dataset</h3>
+<p>The dataset is organized as follows:</p>
 <pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang"></span><span class="code-block-header__copy"></span></div><code class="hljs code-block-body ">database
-    person_name
-        person1.<span class="hljs-keyword">jpg
-</span>    other_person_name
-        other_person1.<span class="hljs-keyword">jpg
-</span></code></pre>
-<p>The <code>face_rec_find.py</code> script supports recognition of multiple faces, while <code>face_rec_verify.py</code> supports recognizing a single face.</p>
-<p>By default, <code>face_rec_find.py</code> uses the <code>database</code> directory for facial recognition. Simply add your photos to the appropriate subdirectories and run the script.</p>
-<p>To use <code>face_rec_verify.py</code>, modify the <code>reference_img</code> variable inside the script with the path to your photo, and then run it.</p>
+├── perso<span class="hljs-symbol">n1</span>
+│   ├── perso<span class="hljs-symbol">n1</span>_<span class="hljs-number">1.</span>jpg
+│   └── perso<span class="hljs-symbol">n1</span>_<span class="hljs-number">2.</span>jpg
+└── perso<span class="hljs-symbol">n2</span>
+    └── perso<span class="hljs-symbol">n2</span>_<span class="hljs-number">1.</span>jpg
+</code></pre>
+<h3>Instructions</h3>
+<p>To use this demo, put your photos in the <code>database/person</code> directory and run <code>face_rec_find.py</code> or <code>face_rec_verify.py</code>.</p>
+<p>Note:</p>
+<ul>
+<li><code>face_rec_find.py</code> by default looks for the face recognition data in the <code>database</code> directory. Simply add your photos to the directory and run the file to recognize them.</li>
+<li>In <code>face_rec_verify.py</code>, you need to change the <code>reference_img</code> variable to your photo's path before running the file.</li>
+</ul>
 </div>
