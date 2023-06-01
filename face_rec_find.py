@@ -89,6 +89,7 @@ while True:
             for face_obj in faces:
                 x, y, w, h = face_obj.source_x, face_obj.source_y, face_obj.source_w, face_obj.source_h
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.putText(frame, face_obj.identity, (x, y + h + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
         else:
             cv2.putText(frame, "NOT MATCH!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3)
 
