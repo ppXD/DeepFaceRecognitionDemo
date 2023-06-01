@@ -24,11 +24,6 @@ counter = 0
 faces = []
 face_match = False
 
-face_source_x = None
-face_source_y = None
-face_source_w = None
-face_source_h = None
-
 reference_path = "database"
 
 
