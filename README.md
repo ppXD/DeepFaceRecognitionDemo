@@ -1,4 +1,4 @@
-<div class="markdown-body"><h1>Project Name</h1>
+<div class="markdown-body"><h1>Face Recognition</h1>
 <p>This project is a demo based on <a href="https://github.com/serengil/deepface">deepface</a></p>
 <h2>Installation</h2>
 <p>To install the dependencies, run the following commands:</p>
