@@ -1,6 +1,4 @@
-import re
 import cv2
-import threading
 from deepface import DeepFace
 
 
@@ -13,6 +11,7 @@ class FaceObject:
         self.source_h = source_h
 
 
+# 加载摄像头
 cap = cv2.VideoCapture(0)
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -25,19 +24,6 @@ face_match = False
 
 reference_path = "database"
 
-
-models = [
-  "VGG-Face",
-  "Facenet",
-  "Facenet512",
-  "OpenFace",
-  "DeepFace",
-  "DeepID",
-  "ArcFace",
-  "Dlib",
-  "SFace",
-]
-
 backends = [
   'opencv',
   'ssd',
@@ -48,20 +34,20 @@ backends = [
 ]
 
 
-def face_rec(video_frame):
+def face_det(video_frame):
     global faces, face_match
     try:
-        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0], detector_backend=backends[4])
         faces = []
-        if len(face_results):
+        face_objs = DeepFace.extract_faces(video_frame, detector_backend=backends[4])
+        print(face_objs)
+        if len(face_objs):
             face_match = True
-            for face in face_results:
-                face_x = face['source_x'].values[0]
-                face_y = face['source_y'].values[0]
-                face_w = face['source_w'].values[0]
-                face_h = face['source_h'].values[0]
-                identity = re.sub(r"\d+$", "", face['identity'].values[0].split("/")[-1].split(".")[0])
-                faces.append(FaceObject(identity, face_x, face_y, face_w, face_h))
+            for face in face_objs:
+                face_x = face['facial_area']['x']
+                face_y = face['facial_area']['y']
+                face_w = face['facial_area']['w']
+                face_h = face['facial_area']['h']
+                faces.append(FaceObject('', face_x, face_y, face_w, face_h))
         else:
             faces = []
             face_match = False
@@ -71,16 +57,11 @@ def face_rec(video_frame):
 
 
 while True:
+    # 读取摄像头帧
     ret, frame = cap.read()
 
     if ret:
-        if counter % 30 == 0:
-            try:
-                threading.Thread(target=face_rec, args=(frame.copy(),)).start()
-            except ValueError:
-                pass
-        counter += 1
-
+        face_det(frame)
         if face_match:
             cv2.putText(frame, "MATCH!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 3)
             for face_obj in faces:
