@@ -39,14 +39,24 @@ models = [
   "SFace",
 ]
 
+backends = [
+  'opencv',
+  'ssd',
+  'dlib',
+  'mtcnn',
+  'retinaface',
+  'mediapipe'
+]
+
 
 def face_rec(video_frame):
     global faces, face_match
     try:
-        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0])
+        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0], detector_backend=backends[4])
         faces = []
         if len(face_results):
             face_match = True
+            print(face_results)
             for face in face_results:
                 face_x = face['source_x'].values[0]
                 face_y = face['source_y'].values[0]
@@ -69,7 +79,7 @@ while True:
     if ret:
         if counter % 30 == 0:
             try:
-                threading.Thread(target=face_rec, args=(frame.copy(), )).start()
+                threading.Thread(target=face_rec, args=(frame.copy(),)).start()
             except ValueError:
                 pass
         counter += 1

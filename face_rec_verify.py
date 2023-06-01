@@ -27,11 +27,20 @@ models = [
   "SFace",
 ]
 
+backends = [
+  'opencv',
+  'ssd',
+  'dlib',
+  'mtcnn',
+  'retinaface',
+  'mediapipe'
+]
 
-def check_face(video_frame):
+
+def face_rec(video_frame):
     global face_match, face_coords
     try:
-        result = DeepFace.verify(video_frame, reference_img, model_name=models[0])
+        result = DeepFace.verify(video_frame, reference_img, model_name=models[0], detector_backend=backends[2])
         print(result)
         if result['verified']:
             face_match = True
@@ -49,7 +58,7 @@ while True:
     if ret:
         if counter % 30 == 0:
             try:
-                threading.Thread(target=check_face, args=(frame.copy(), )).start()
+                threading.Thread(target=face_rec, args=(frame.copy(), )).start()
             except ValueError:
                 pass
         counter += 1
