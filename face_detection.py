@@ -1,14 +1,6 @@
 import cv2
 from deepface import DeepFace
-
-
-class FaceObject:
-    def __init__(self, identity, source_x, source_y, source_w, source_h):
-        self.identity = identity
-        self.source_x = source_x
-        self.source_y = source_y
-        self.source_w = source_w
-        self.source_h = source_h
+from face_base import FaceObject, DETECTORS
 
 
 # 加载摄像头
@@ -24,21 +16,12 @@ face_match = False
 
 reference_path = "database"
 
-backends = [
-  'opencv',
-  'ssd',
-  'dlib',
-  'mtcnn',
-  'retinaface',
-  'mediapipe'
-]
-
 
 def face_det(video_frame):
     global faces, face_match
     try:
         faces = []
-        face_objs = DeepFace.extract_faces(video_frame, detector_backend=backends[4])
+        face_objs = DeepFace.extract_faces(video_frame, detector_backend=DETECTORS[4])
         print(face_objs)
         if len(face_objs):
             face_match = True

@@ -2,16 +2,7 @@ import re
 import cv2
 import threading
 from deepface import DeepFace
-
-
-class FaceObject:
-    def __init__(self, identity, source_x, source_y, source_w, source_h):
-        self.identity = identity
-        self.source_x = source_x
-        self.source_y = source_y
-        self.source_w = source_w
-        self.source_h = source_h
-
+from face_base import MODELS, DETECTORS, FaceObject
 
 cap = cv2.VideoCapture(0)
 
@@ -24,34 +15,14 @@ faces = []
 face_match = False
 
 reference_path = "database"
+reference_img_path = "database/mars/mars1.jpg"
+reference_img = cv2.imread(reference_img_path)
 
 
-models = [
-  "VGG-Face",
-  "Facenet",
-  "Facenet512",
-  "OpenFace",
-  "DeepFace",
-  "DeepID",
-  "ArcFace",
-  "Dlib",
-  "SFace",
-]
-
-backends = [
-  'opencv',
-  'ssd',
-  'dlib',
-  'mtcnn',
-  'retinaface',
-  'mediapipe'
-]
-
-
-def face_rec(video_frame):
+def face_rec_find(video_frame):
     global faces, face_match
     try:
-        face_results = DeepFace.find(video_frame, reference_path, model_name=models[0], detector_backend=backends[0])
+        face_results = DeepFace.find(video_frame, reference_path, model_name=MODELS[0], detector_backend=DETECTORS[0])
         faces = []
         if len(face_results):
             has_face = False
@@ -73,13 +44,34 @@ def face_rec(video_frame):
         face_match = False
 
 
+def face_rec_verify(video_frame):
+    global faces, face_match
+    try:
+        result = DeepFace.verify(video_frame, reference_img, model_name=MODELS[0], detector_backend=DETECTORS[0])
+        faces = []
+        if result['verified']:
+            face_match = True
+            face_x = result['facial_areas']['img1']['x']
+            face_y = result['facial_areas']['img1']['y']
+            face_w = result['facial_areas']['img1']['w']
+            face_h = result['facial_areas']['img1']['h']
+            identity = re.sub(r"\d+$", "", reference_img_path.split("/")[-1].split(".")[0])
+            faces.append(FaceObject(identity, face_x, face_y, face_w, face_h))
+        else:
+            faces = []
+            face_match = False
+    except ValueError:
+        faces = []
+        face_match = False
+
+
 while True:
     ret, frame = cap.read()
 
     if ret:
         if counter % 30 == 0:
             try:
-                threading.Thread(target=face_rec, args=(frame.copy(),)).start()
+                threading.Thread(target=face_rec_verify, args=(frame.copy(),)).start()
             except ValueError:
                 pass
         counter += 1
