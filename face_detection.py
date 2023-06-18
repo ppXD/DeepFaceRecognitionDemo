@@ -1,4 +1,5 @@
 import cv2
+import threading
 from deepface import DeepFace
 from face_base import FaceObject, DETECTORS
 
@@ -20,8 +21,8 @@ reference_path = "database"
 def face_det(video_frame):
     global faces, face_match
     try:
+        face_objs = DeepFace.extract_faces(video_frame, detector_backend=DETECTORS[0])
         faces = []
-        face_objs = DeepFace.extract_faces(video_frame, detector_backend=DETECTORS[4])
         print(face_objs)
         if len(face_objs):
             face_match = True
@@ -44,7 +45,12 @@ while True:
     ret, frame = cap.read()
 
     if ret:
-        face_det(frame)
+        if counter % 30 == 0:
+            try:
+                threading.Thread(target=face_det, args=(frame.copy(),)).start()
+            except ValueError:
+                pass
+        counter += 1
         if face_match:
             cv2.putText(frame, "MATCH!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 3)
             for face_obj in faces:
